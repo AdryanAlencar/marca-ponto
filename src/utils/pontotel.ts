@@ -3,6 +3,7 @@ import { CheckPasswordResponse, CompanyRepsonse, DeviceResponse } from '../types
 
 const API_BASE_URL = "back.pontotel.com.br"
 const API_URL = `https://${API_BASE_URL}`;
+var SESSION = ""
 
 const doLogin = async (email: string, password: string) => {
     // make a post with axios, in json format
@@ -16,11 +17,11 @@ const doLogin = async (email: string, password: string) => {
             password
         })
     })
+    
+    SESSION = request.headers.get('Set-Cookie') || '';
 
     let response = await request.json() as CompanyRepsonse;
-    // get session cookie from set-cookie header
-    let sessionCookie = await request.headers['Set-Cookie'][0];
-
+    let sessionCookie = formatCookiesString(request.headers.get('Set-Cookie') || '').filter(cookie => cookie.key === 'session')[0].value;
     return {
         company: response.success.comp_man,
         session: sessionCookie
@@ -41,8 +42,18 @@ const activateDevice = async (params : {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Cookie': params.compMan
+            "Sec-Ch-Ua": "(Not(A\":B\"rand\";v=\"8\", \"Chromium\";v=\"101\"",
+            "Accept": "application/json, text/plain, */*",
+            "Sec-Ch-Ua-Mobile": "?0",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.67 Safari/537.36",
+            "Sec-Ch-Ua-Platform": "macOS",
+            "Origin": "https://registro.pontotel.com.br",
+            "Sec-Fetch-Site": "same-site",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Dest": "empty",
+            "Cookie": SESSION,
         },
+        redirect: 'follow',
         body: JSON.stringify({
             reason: params.reason,
             name: params.name,
@@ -55,7 +66,7 @@ const activateDevice = async (params : {
     })
 
     let response = await request.json() as DeviceResponse;
-    let sessionCookie = await request.headers['Set-Cookie'][0];
+    let sessionCookie = formatCookiesString(request.headers.get('Set-Cookie') || '').filter(cookie => cookie.key === 'session')[0].value;
 
     return {
         device: response.success,
@@ -74,7 +85,8 @@ const checkPassword = async (fingerprint: string, password: string) => {
     let request = await fetch(`${API_URL}/web/checkpwd`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Cookie': SESSION
         },
         body: JSON.stringify({
             pwd: password,
@@ -83,11 +95,66 @@ const checkPassword = async (fingerprint: string, password: string) => {
     })
 
     let response = await request.json() as CheckPasswordResponse;
+
+    return {
+        history: response.success
+    }
+}
+
+const registerJourney = async (params : {
+    kind: "Saída" | "Entrada",
+    fingerprint: string,
+    employee: string,
+    sessionToken: string
+}) => {
+    let request = await fetch(`${API_URL}/web/savetimelog`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'multipart/form-data',
+            'Cookies': SESSION
+        },
+        body: formatFormData({
+            kind: params.kind,
+            fingerprint: params.fingerprint,
+            employee: params.employee,
+            sessionToken: params.sessionToken
+        })
+    });
+
+    return request.ok;
+}
+
+const formatFormData = (params : any) => {
+    let form_data = new FormData();
+
+    for (let key in params) {
+        form_data.append(key, params[key]);
+    }
+
+    return form_data;
+}
+
+const formatCookiesString = (cookies: string) => {
+    let cookies_array = cookies.split(';');
+    let cookies_string = [] as {key: string, value: string}[];
+
+    cookies_array.forEach(cookie => {
+        let key = cookie.split('=')[0];
+        let value = cookie.split('=')[1];
+
+        cookies_string.push({
+            key,
+            value
+        });
+    });
+
+    return cookies_string;
 }
 
 export {
     doLogin,
     activateDevice,
     getCurrentTime,
-    checkPassword
+    checkPassword,
+    registerJourney
 }

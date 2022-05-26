@@ -4,7 +4,8 @@
   "description": "A simple bot to mark the join and exit.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "ts-node --transpile-only src/index.ts",
+    "dev": "ts-node-dev --transpile-only --ignore-watch node_modules src/index.ts"
   },
   "repository": {
     "type": "git",
@@ -17,19 +18,19 @@
   ],
   "dependencies": {
     "@types/axios": "^0.14.0",
+    "@types/dotenv": "^8.2.0",
     "@types/node-fetch": "^2.6.1",
     "axios": "^0.26.1",
     "body-parser": "^1.19.2",
     "cors": "^2.8.5",
-    "dotenv": "^16.0.0",
+    "dotenv": "^16.0.1",
     "express": "^4.17.3",
     "morgan": "^1.10.0",
     "node-cron": "^3.0.0",
-    "node-fetch": "^3.2.4",
+    "node-fetch": "^2.6.1",
     "starkbank": "^2.10.1",
     "ts-node": "^10.7.0",
     "ts-node-dev": "^1.1.8",
-    "typescript": "^4.6.2",
     "winston": "^3.6.0"
   },
   "devDependencies": {
@@ -39,7 +40,8 @@
     "@types/morgan": "^1.9.3",
     "@types/node": "^17.0.21",
     "@types/node-cron": "^3.0.1",
-    "@types/winston": "^2.4.4"
+    "@types/winston": "^2.4.4",
+    "typescript": "^4.7.2"
   },
   "author": "AdryanAlencar <adryan.alencar@sevenfox.com.br>",
   "license": "ISC",
