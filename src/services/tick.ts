@@ -21,7 +21,7 @@ export function preventStop(){
 function shutdown(signal : string) {
     return (err : any) => {
         setTimeout(() => {
-            preventStop();
+            axios.get(process.env.BASE_URL || "")
             process.exit(err ? 1 : 0);
         }, 5000).unref();
     };

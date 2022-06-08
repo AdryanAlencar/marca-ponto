@@ -77,10 +77,16 @@ export const initWorker = () => {
     cron.schedule('0 40 8 * * * *', async () => {
         console.info(`Journey in;`);
         TaskJourneyIn(credentials);
+    },{
+        scheduled: true,
+        timezone: "America/Sao_Paulo"
     });
 
     cron.schedule('0 20 18 * * * *', async () => {
         console.info(`Journey out;`);
         TaskJourneyOut(credentials);
+    },{
+        scheduled: true,
+        timezone: "America/Sao_Paulo"
     })
 }
