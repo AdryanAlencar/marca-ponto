@@ -1,5 +1,6 @@
 import fetch from 'node-fetch';
 import { CheckPasswordResponse, CompanyRepsonse, DeviceResponse } from '../types/pontotel';
+import FormData from 'form-data';
 
 const API_BASE_URL = "back.pontotel.com.br"
 const API_URL = `https://${API_BASE_URL}`;
@@ -121,19 +122,24 @@ const registerJourney = async (params : {
     employee: string,
     sessionToken: string
 }) => {
+    let data = formatFormData({
+        kind: params.kind,
+        fingerprint: params.fingerprint,
+        employee: params.employee,
+        sessionToken: params.sessionToken
+    })
+
     let request = await fetch(`${API_URL}/web/savetimelog`, {
         method: 'POST',
         headers: {
             'Content-Type': 'multipart/form-data',
-            'Cookies': SESSION
+            'Cookies': SESSION,
+            ...data.getHeaders()
         },
-        body: formatFormData({
-            kind: params.kind,
-            fingerprint: params.fingerprint,
-            employee: params.employee,
-            sessionToken: params.sessionToken
-        })
+        body: data
     });
+
+    console.log(await request.text());
 
     return request.ok;
 }

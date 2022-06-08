@@ -52,6 +52,9 @@ export const initWorker = () => {
     var credentials : {
         device: Device;
         session: string;
+    } = {} as {
+        device: Device;
+        session: string;
     };
 
     (async () => {
