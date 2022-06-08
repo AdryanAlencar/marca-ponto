@@ -38,31 +38,45 @@ const activateDevice = async (params : {
     isMobile: true | boolean,
     appVersion: "v2.9.6"
 }) => {
+    console.log(`${JSON.stringify({
+        reason: params.reason,
+        name: params.name,
+        email: params.email,
+        pwd: params.pwd,
+        userAgent: params.userAgent,
+        isMobile: params.isMobile,
+        appVersion: params.appVersion
+    })}`)
     let request = await fetch(`${API_URL}/web/device`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
-            "Sec-Ch-Ua": "(Not(A\":B\"rand\";v=\"8\", \"Chromium\";v=\"101\"",
-            "Accept": "application/json, text/plain, */*",
-            "Sec-Ch-Ua-Mobile": "?0",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.67 Safari/537.36",
-            "Sec-Ch-Ua-Platform": "macOS",
-            "Origin": "https://registro.pontotel.com.br",
-            "Sec-Fetch-Site": "same-site",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Dest": "empty",
-            "Cookie": SESSION,
+            'Host': 'back.pontotel.com.br',
+            'Content-Length': '303',
+            'Sec-Ch-Ua': '"(Not(A:Brand";v="8", "Chromium";v="99"',
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json;charset=UTF-8',
+            'Sec-Ch-Ua-Mobile': '?0',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36',
+            'Sec-Ch-Ua-Platform': '"Linux"',
+            'Origin': 'https://registro.pontotel.com.br',
+            'Sec-Fetch-Site': 'same-site',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Dest': 'empty',
+            'Referer': 'https://registro.pontotel.com.br/',
+            'Accept-Encoding': 'gzip, deflate',
+            'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7',
+            'Cookie': SESSION
         },
-        redirect: 'follow',
-        body: JSON.stringify({
+        body: `${JSON.stringify({
             reason: params.reason,
             name: params.name,
             email: params.email,
             pwd: params.pwd,
             userAgent: params.userAgent,
             isMobile: params.isMobile,
-            appVersion: params.appVersion
-        })
+            appVersion: params.appVersion,
+            compMan: params.compMan
+        })}`
     })
 
     let response = await request.json() as DeviceResponse;

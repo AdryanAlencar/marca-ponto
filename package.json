@@ -4,8 +4,8 @@
   "description": "A simple bot to mark the join and exit.",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node --transpile-only src/index.ts",
-    "dev": "ts-node-dev --transpile-only --ignore-watch node_modules src/index.ts"
+    "start": "ts-node --transpile-only src/server.ts",
+    "dev": "ts-node-dev --transpile-only --ignore-watch node_modules src/server.ts"
   },
   "repository": {
     "type": "git",
@@ -24,9 +24,11 @@
     "body-parser": "^1.19.2",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
-    "express": "^4.17.3",
+    "express": "^4.18.1",
+    "fetch-to-curl": "^0.5.2",
+    "firebase-admin": "^10.2.0",
     "morgan": "^1.10.0",
-    "node-cron": "^3.0.0",
+    "node-cron": "^3.0.1",
     "node-fetch": "^2.6.1",
     "starkbank": "^2.10.1",
     "ts-node": "^10.7.0",
