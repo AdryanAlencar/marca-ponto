@@ -5,6 +5,6 @@ import { initWorker } from './services/worker';
 
 app.listen(process.env.PORT || 8000, () => {  
     console.info(`[HTTP] => Server is running on port ${process.env.PORT || 8000}`);
-    initWorker();
-    preventStop();
+    //initWorker();
+    //preventStop();
 });
